@@ -37,6 +37,33 @@ lerobot-info
 > [!IMPORTANT]
 > For detailed installation guide, please see the [Installation Documentation](https://huggingface.co/docs/lerobot/installation).
 
+### 国内环境使用 uv
+
+本仓库的普通 Python 依赖优先从清华 PyPI 镜像下载，锁文件也记录镜像下载地址。
+官方 PyPI 作为默认兜底源；uv 使用 `first-index` 策略，不会自动测速择优，也不会因首个源缺少某个版本就自动换源。
+Linux 上的 `torch` 和 `torchvision` 保留 PyTorch 官方 CUDA 12.8 源，适用于 RTX 4090；NVIDIA 驱动需至少为 570.86。
+这些设置适用于在本仓库内执行 uv 命令，不改变全局配置或 Hugging Face 模型、数据集的下载地址。
+
+```bash
+uv sync --locked --python 3.12
+# 按需增加依赖，例如：
+uv sync --locked --python 3.12 --extra pusht --extra diffusion --extra evaluation
+```
+
+uv 可以通过 HTTP 代理访问海外源。仅打开代理软件的系统代理开关，不一定能让终端进程使用代理；
+可在执行 uv 的终端设置以下环境变量。这里使用本机 Clash 的 HTTP 混合端口，其他机器请替换地址和端口：
+
+```bash
+export HTTP_PROXY="http://127.0.0.1:7897"
+export HTTPS_PROXY="$HTTP_PROXY"
+export NO_PROXY="localhost,127.0.0.1,.aliyun.com,.tsinghua.edu.cn,.cloud.tencent.com,.huaweicloud.com,.doubanio.com,.ustc.edu.cn"
+export no_proxy="$NO_PROXY"
+uv sync --locked --python 3.12 --extra pusht --extra diffusion --extra evaluation
+```
+
+国内镜像直连，海外下载使用代理；实际速度取决于网络和代理线路。环境变量只影响当前终端及其后续启动的进程。
+已经运行的 `uv sync` 不会自动切换源或代理；在原终端按 `Ctrl+C`，然后重新执行上述命令，uv 会复用已完成的缓存。
+
 ## Robots & Control
 
 <div align="center">

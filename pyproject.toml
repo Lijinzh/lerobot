@@ -398,6 +398,16 @@ lerobot-rollout="lerobot.scripts.lerobot_rollout:main"
 
 # ---------------- Tool Configurations ----------------
 
+# 普通依赖优先使用清华镜像；官方 PyPI 作为默认兜底源。
+[[tool.uv.index]]
+name = "tsinghua"
+url = "https://pypi.tuna.tsinghua.edu.cn/simple"
+
+[[tool.uv.index]]
+name = "pypi"
+url = "https://pypi.org/simple"
+default = true
+
 # cu128 wheels keep broad hardware reach; the driver floor is 570.86.
 # To use a different CUDA variant, reinstall torch with an explicit index, e.g.:
 #   uv pip install --force-reinstall torch torchvision \
